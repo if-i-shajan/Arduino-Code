@@ -1,3 +1,10 @@
+/*
+Servo Wire	--> Arduino Pin
+GND (Brown/Black)	--> GND
+VCC (Red)	--> 5V
+Signal (Orange)	--> Pin 9
+*/
+
 #include <Servo.h>
 #include <math.h>  // Needed for sin()
 
