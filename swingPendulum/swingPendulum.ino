@@ -20,7 +20,7 @@ float angle = 0.0;             // Angle in radians
 float swingCenter = 90.0;      // Middle servo position
 float swingRange = 80.0;       // Max swing from center (e.g. ±50°)
 float angleStep = 0.05;        // How much angle increases each loop
-int delayTime = 5;            // Delay for smooth swing
+int delayTime = 10;            // Delay for smooth swing
 
 bool swingDone = false;        // To track when swing finishes
 
