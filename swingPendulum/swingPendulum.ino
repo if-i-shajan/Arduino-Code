@@ -1,33 +1,50 @@
 /*
-Servo Wire	--> Arduino Pin
-GND (Brown/Black)	--> GND
-VCC (Red)	--> 5V
-Signal (Orange)	--> Pin 9
+LED Pin --> Connect To Arduino
+Longer leg (+) --> Digital Pin 8
+Shorter leg (–) --> GND (through a 220Ω resistor)
+
+Servo Wire --> Arduino Pin
+GND (Brown/Black) --> GND
+VCC (Red) --> 5V
+Signal (Orange) --> Pin 9
 */
 
 #include <Servo.h>
-#include <math.h>  // Needed for sin()
+#include <math.h>  // For sin()
 
 Servo pendulum;
 
-float angle = 0;         // Angle in radians (for sine)
-float swingCenter = 90;  // Middle point of swing
-float swingRange = 50;   // How wide the swing is
-int delayTime = 10;      // Controls speed
+const int ledPin = 8;
+
+float angle = 0.0;             // Angle in radians
+float swingCenter = 90.0;      // Middle servo position
+float swingRange = 80.0;       // Max swing from center (e.g. ±50°)
+float angleStep = 0.05;        // How much angle increases each loop
+int delayTime = 5;            // Delay for smooth swing
+
+bool swingDone = false;        // To track when swing finishes
 
 void setup() {
-  pendulum.attach(9);
+  pendulum.attach(9);           // Attach servo to pin 9
+  pinMode(ledPin, OUTPUT);      // Set LED pin as output
 }
 
 void loop() {
-  // Calculate smooth pendulum angle using sine wave
+  // Calculate smooth swing position using sine wave
   float servoAngle = swingCenter + swingRange * sin(angle);
+  pendulum.write((int)servoAngle);
+  delay(delayTime);
 
-  pendulum.write((int)servoAngle);  // Move servo
-  delay(delayTime);                 // Control swing speed
+  angle += angleStep;
 
-  angle += 0.05;  // Step through the sine wave
-  if (angle > 2 * PI) {
-    angle = 0;  // Reset after full cycle
+  // When one full swing is completed (2π radians)
+  if (angle >= 2 * PI) {
+    angle = 0; // Reset angle for next cycle
+
+    // Blink LED once for 1 second (natural tick)
+    digitalWrite(ledPin, HIGH);
+    delay(1000);
+    digitalWrite(ledPin, LOW);
+    delay(1000);
   }
 }
